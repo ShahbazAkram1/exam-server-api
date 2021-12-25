@@ -1,5 +1,6 @@
 package com.exam.service.impl;
 
+
 import com.exam.model.User;
 import com.exam.model.UserRole;
 import com.exam.repository.RoleRepository;
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user, Set<UserRole> userRoles) {
 
-        User user1 = this.userRepository.findByUserName(user.getUserName());
+        User user1 = this.userRepository.findByUsername(user.getUsername());
 
         if (user1 != null) {
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     //getting user by username
     @Override
     public User getUser(String username) {
-        return this.userRepository.findByUserName(username);
+        return this.userRepository.findByUsername(username);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User user) {
 
         User existinguser = userRepository.findById(user.getId()).orElse(null);
-        existinguser.setUserName(user.getUserName());
+        existinguser.setUsername(user.getUsername());
         existinguser.setFirstName(user.getFirstName());
         existinguser.setLastName(user.getLastName());
         existinguser.setEmail(user.getEmail());

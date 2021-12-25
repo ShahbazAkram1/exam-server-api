@@ -2,26 +2,26 @@ package com.exam.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", nullable = false)
     private Long id;
 
     @Column(name = "user_name")
-    private String userName;
+    private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "first_name")
@@ -44,5 +44,29 @@ public class User {
     @JsonIgnore
     private Set<UserRole> userRoles = new HashSet<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
 
+        Set<Authority> authorities = new HashSet<>();
+        this.userRoles.forEach(userRole -> {
+            authorities.add(new Authority(userRole.getRole().getRoleName()));
+        });
+
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 }
